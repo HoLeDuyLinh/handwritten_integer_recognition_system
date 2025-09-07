@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Nhận diện chữ số viết tay</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f7f7f7; }
+        .container { max-width: 400px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px #ccc; }
+        h2 { text-align: center; }
+        .result { color: green; font-size: 1.2em; text-align: center; }
+        .error { color: red; text-align: center; }
+        .file-input { margin: 20px 0; }
+        button { width: 100%; padding: 10px; background: #4CAF50; color: #fff; border: none; border-radius: 4px; font-size: 1em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Nhận diện chữ số viết tay (0-10)</h2>
+        <form method="post" enctype="multipart/form-data">
+            <div class="file-input">
+                <input type="file" name="file" accept="image/*" required>
+            </div>
+            <button type="submit">Tải lên & Dự đoán</button>
+        </form>
+        {% if result is defined %}
+            <div class="result">Kết quả dự đoán: <b>{{ result }}</b> cho file <i>{{ filename }}</i></div>
+        {% endif %}
+        {% if error is defined %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+    </div>
+</body>
+</html>

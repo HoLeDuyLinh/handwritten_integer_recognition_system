@@ -1,77 +1,100 @@
-# Hệ thống nhận dạng chữ số viết tay (0-10)
 
-Đây là một dự án nhận dạng chữ số viết tay sử dụng mạng nơ-ron tích chập (CNN) với TensorFlow và Keras. Dự án này có khả năng nhận dạng các chữ số từ 0 đến 10, mở rộng từ bộ dữ liệu MNIST tiêu chuẩn.
+# Hệ thống nhận dạng chữ số nguyên viết tay (0-10) sử dụng AI
+
+Dự án nhận dạng chữ số viết tay sử dụng mạng nơ-ron tích chập (CNN) với TensorFlow/Keras, huấn luyện trên bộ dữ liệu MNIST kết hợp hơn 500 ảnh tự thu thập. Hệ thống cung cấp REST API Flask và giao diện web đơn giản cho phép tải ảnh kiểm tra, trích xuất điểm và cập nhật file Excel tự động. Độ chính xác mô hình đạt ~98%.
 
 ## Cấu trúc dự án
 
-- `main.py`: Tập lệnh này được sử dụng để dự đoán một ảnh chữ số riêng lẻ.
-- `model_train.py`: Chứa mã để xây dựng, huấn luyện và lưu mô hình CNN nhận dạng chữ số. Nó sử dụng cả bộ dữ liệu MNIST và tập dữ liệu tùy chỉnh.
-- `batch_predict.py`: Thực hiện dự đoán hàng loạt trên các ảnh trong thư mục `test_digits` và lưu kết quả vào một file Excel.
-- `bieu_do.py`: Tạo biểu đồ hiển thị lịch sử huấn luyện của mô hình (độ chính xác và độ mất mát) từ file `training_history.pkl`.
-- `data_train/`: Thư mục chứa tập dữ liệu huấn luyện tùy chỉnh, được tổ chức thành các thư mục con từ '0' đến '10' (mỗi thư mục chứa ảnh của chữ số tương ứng).
-- `test_digits/`: Thư mục chứa các ảnh chữ số được sử dụng để kiểm tra mô hình.
-- `digit_classifier_0_to_10.keras`: Mô hình CNN đã được huấn luyện.
-- `ket_qua_du_doan.xlsx`: File Excel lưu trữ kết quả dự đoán từ `batch_predict.py`.
-- `training_history.pkl`: File pickle chứa lịch sử huấn luyện của mô hình (độ chính xác và độ mất mát).
-- `training_plot.png`: Ảnh biểu đồ thể hiện lịch sử huấn luyện của mô hình.
-- `Nhom1_To6_Project_XLA.pptx`: Slide thuyết trình dự án.
+- `model_train.py`: Huấn luyện mô hình CNN nhận dạng chữ số (0-10) trên MNIST + ảnh tự thu thập.
+- `main.py`: Dự đoán một ảnh chữ số đơn lẻ.
+- `batch_predict.py`: Dự đoán hàng loạt ảnh trong thư mục `test_digits/`, lưu kết quả vào Excel.
+- `app.py`: REST API Flask và giao diện web cho phép upload ảnh, trả về kết quả dự đoán, tự động cập nhật file Excel.
+- `templates/index.html`: Giao diện web upload ảnh, xem kết quả.
+- `bieu_do.py`: Vẽ biểu đồ lịch sử huấn luyện mô hình.
+- `data_train/`: Ảnh huấn luyện tự thu thập (0-10).
+- `test_digits/`: Ảnh kiểm tra mô hình.
+- `digit_classifier_0_to_10.keras`: File mô hình đã huấn luyện.
+- `ket_qua_du_doan.xlsx`: File Excel lưu kết quả dự đoán.
+- `training_history.pkl`, `training_plot.png`: Lịch sử và biểu đồ huấn luyện.
+- `requirements.txt`: Danh sách thư viện cần thiết.
+
 
 ## Cài đặt
 
-Để chạy dự án này, bạn cần cài đặt các thư viện Python sau:
+1. Tạo và kích hoạt môi trường ảo (khuyến nghị):
 
-```bash
-pip install tensorflow keras numpy scikit-learn pandas matplotlib natsort pillow
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate
 ```
 
-## Cách sử dụng
+2. Cài đặt các thư viện cần thiết:
+
+```bash
+pip install -r requirements.txt
+# hoặc nếu thiếu:
+pip install tensorflow keras flask pandas openpyxl scikit-learn matplotlib natsort pillow werkzeug
+```
+
+
+## Hướng dẫn sử dụng
 
 ### 1. Huấn luyện mô hình
-
-Chạy tập lệnh `model_train.py` để huấn luyện mô hình CNN:
 
 ```bash
 python model_train.py
 ```
-
-Mô hình đã huấn luyện sẽ được lưu dưới dạng `digit_classifier_0_to_10.keras` và lịch sử huấn luyện sẽ được lưu dưới dạng `training_history.pkl`.
+> Mô hình sẽ được lưu thành `digit_classifier_0_to_10.keras`.
 
 ### 2. Xem biểu đồ huấn luyện
-
-Sau khi huấn luyện mô hình, bạn có thể xem biểu đồ độ chính xác và độ mất mát bằng cách chạy:
 
 ```bash
 python bieu_do.py
 ```
-
-Biểu đồ sẽ được lưu dưới dạng `training_plot.png` và hiển thị trên màn hình.
+> Biểu đồ lưu tại `training_plot.png`.
 
 ### 3. Dự đoán một ảnh đơn lẻ
 
-Để dự đoán một ảnh chữ số, hãy chỉnh sửa đường dẫn ảnh trong `main.py` và sau đó chạy tập lệnh:
+Chỉnh sửa đường dẫn ảnh trong `main.py`, sau đó:
 
 ```bash
 python main.py
 ```
-
-Kết quả dự đoán sẽ được in ra console.
+> Kết quả sẽ in ra console.
 
 ### 4. Dự đoán hàng loạt
-
-Để chạy dự đoán trên tất cả các ảnh trong thư mục `test_digits` và lưu kết quả vào file Excel, hãy chạy:
 
 ```bash
 python batch_predict.py
 ```
+> Kết quả lưu vào `ket_qua_du_doan.xlsx`.
 
-Kết quả sẽ được lưu vào file `ket_qua_du_doan.xlsx`. Nếu file đã tồn tại, kết quả mới sẽ được nối thêm vào.
+### 5. Sử dụng REST API Flask & giao diện web
 
-## Tập dữ liệu
+Chạy server Flask:
 
-Dự án sử dụng kết hợp:
-- Bộ dữ liệu MNIST (chữ số 0-9)
-- Tập dữ liệu tùy chỉnh cho các chữ số từ 0-10, nằm trong thư mục `data_train/`.
+```bash
+python app.py
+```
 
-## Mô hình
+Sau đó truy cập [http://localhost:5000](http://localhost:5000) để sử dụng giao diện web:
+- Upload ảnh kiểm tra, xem kết quả dự đoán, kết quả sẽ tự động lưu vào file Excel.
 
-Mô hình là một mạng nơ-ron tích chập (CNN) được xây dựng bằng Keras, bao gồm các lớp `Conv2D`, `MaxPooling2D`, `Flatten`, `Dense` và `Dropout` để đạt được hiệu suất cao trong việc nhận dạng chữ số.
+#### Sử dụng API
+Gửi POST request tới `/api/predict` với file ảnh:
+
+```bash
+curl -F "file=@duongdan/ten_anh.png" http://localhost:5000/api/predict
+```
+> Kết quả trả về dạng JSON: tên file và số dự đoán.
+
+
+## Dữ liệu & Mô hình
+
+- Dữ liệu: Kết hợp bộ MNIST (0-9) và >500 ảnh tự thu thập (0-10) trong `data_train/`.
+- Mô hình: CNN (Keras/TensorFlow) gồm các lớp Conv2D, MaxPooling2D, Flatten, Dense, Dropout.
+- Độ chính xác đạt ~98% trên tập kiểm tra.
+
+## Đóng góp & Liên hệ
+
+Mọi ý kiến đóng góp xin gửi về nhóm phát triển hoặc tạo issue trên repository.
